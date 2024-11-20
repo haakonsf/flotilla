@@ -1,4 +1,4 @@
-import { Card, Typography } from '@equinor/eds-core-react'
+import { Button, Card, Icon, Typography } from '@equinor/eds-core-react'
 import { Robot, RobotStatus } from 'models/Robot'
 import { tokens } from '@equinor/eds-tokens'
 import { RobotStatusChip } from 'components/Displays/RobotDisplays/RobotStatusIcon'
@@ -11,6 +11,10 @@ import { PressureStatusDisplay } from 'components/Displays/RobotDisplays/Pressur
 import { config } from 'config'
 import { RobotType } from 'models/RobotModel'
 import { Mission } from 'models/Mission'
+import { StopMissionDialog } from '../MissionOverview/StopDialogs'
+import { useState } from 'react'
+import { TaskType } from 'models/Task'
+import { Icons } from 'utils/icons'
 
 interface RobotProps {
     robot: Robot
@@ -77,6 +81,12 @@ const LongTypography = styled(Typography)`
         word-break: break-word;
     }
 `
+const StyledButton = styled(Button)`
+    height: auto;
+    min-height: ${tokens.shape.button.minHeight};
+    margin-top: 10px;
+    width: 100%;
+`
 
 export const RobotStatusCard = ({ robot, mission }: RobotProps) => {
     let navigate = useNavigate()
@@ -85,11 +95,20 @@ export const RobotStatusCard = ({ robot, mission }: RobotProps) => {
         const path = `${config.FRONTEND_BASE_ROUTE}/robot/${robot.id}`
         navigate(path)
     }
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const toggleStopMissionDialog = () => {
+        setIsDialogOpen(!isDialogOpen)
+    }
 
     const getRobotModel = (type: RobotType) => {
         if (type === RobotType.TaurobInspector || type === RobotType.TaurobOperator) return 'Taurob'
         return type
     }
+
+    let missionTaskType = undefined
+    if (mission?.tasks.every((task) => task.type === TaskType.Inspection)) missionTaskType = TaskType.Inspection
+    if (mission?.tasks.every((task) => task.type === TaskType.ReturnHome)) missionTaskType = TaskType.ReturnHome
+    if (mission?.tasks.every((task) => task.type === TaskType.Localization)) missionTaskType = TaskType.Localization
 
     return (
         <HoverableStyledCard style={{ boxShadow: tokens.elevation.raised }} onClick={goToRobot}>
@@ -143,6 +162,27 @@ export const RobotStatusCard = ({ robot, mission }: RobotProps) => {
                         <></>
                     )}
                 </HorizontalContent>
+                <StyledButton
+                    variant="contained"
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        toggleStopMissionDialog()
+                    }}
+                >
+                    <Icon
+                        name={Icons.StopButton}
+                        style={{ color: tokens.colors.interactive.icon_on_interactive_colors.rgba }}
+                        size={24}
+                    />
+                    {TranslateText('Stop')} {robot.name}
+                    <StopMissionDialog
+                        missionName={mission?.name}
+                        robotId={robot.id}
+                        missionTaskType={missionTaskType}
+                        isStopMissionDialogOpen={isDialogOpen}
+                        toggleDialog={toggleStopMissionDialog}
+                    />
+                </StyledButton>
             </ButtonCard>
         </HoverableStyledCard>
     )
