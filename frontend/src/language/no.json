@@ -83,6 +83,7 @@
     "Stop button pressed warning text": "Du er i ferd med å stoppe hele oppdraget. Hvis det ikke er flere oppdrag i kø vil roboten bli sendt tilbake til startposisjonen sin.",
     "Stop button pressed confirmation text": "Er du sikker på at du vil stoppe oppdraget?",
     "Stop mission": "Stopp oppdraget",
+    "Stop mission:": "Stopp oppdrag: ",
     "Search for missions": "Søk etter oppdrag",
     "Search for a tag": "Søk etter tag",
     "Search for a robot name": "Søk etter robotnavn",
@@ -267,5 +268,8 @@
     "Failed to retrieve previous mission runs": "Kunne ikke hente tildigere oppdragskjøringer",
     "Documentation": "Dokumentasjon",
     "Map of {0}": "Kart over {0}",
-    "Docked": "Ladestasjon"
+    "Docked": "Ladestasjon",
+    "No mission running": "Ingen pågående Flotilla oppdrag",
+    "Stop button pressed with no tasktype warning text": "Et stopp signal ble mottat uten noen pågående oppdrag.",
+    "Stop button pressed with no mission confirmation text": "Ønsker du å sende stopp signalet til roboten likevel?"
 }
